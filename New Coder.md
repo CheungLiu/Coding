@@ -258,7 +258,41 @@ public:
 ```
 
 
-
+### 91、最长上升子序列
+```C++
+//动态规划
+int LIS(vector<int> &arr)
+{
+    if (arr.size() == 0)
+    {
+        return 0;
+    }
+    int length = arr.size();
+    // int dp[length];
+    //初始化数组dp的每个值为1，memset只能填充0和-1，因为其是按字节填充
+    // memset(dp, 1, sizeof(dp));
+    vector<int> dp(length);
+    // fill_n(dp.begin(), length, 1);
+    fill(dp.begin(), dp.end(), 1);
+    int max_length = INT_MIN;
+    //最外层for循环
+    for (int i = 1; i < length; ++i)
+    {
+        //里面的for循环是寻找长度为i时的最长递增子序列，从长度为0开始找
+        for (int j = 0; j < i; ++j)
+        {
+            if (arr[i] >= arr[j])
+            {
+                //dp[i]表示数组的前i个元素构成的最长上升子序列
+                dp[i] = max(dp[i], dp[j] + 1);
+                max_length = max(max_length, dp[i]);
+            }
+        }
+    }
+    return max_length;
+}
+//二分查找
+```
 ### 101、缺失数字
 
 ```c++
