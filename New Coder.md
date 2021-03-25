@@ -292,6 +292,37 @@ int LIS(vector<int> &arr)
     return max_length;
 }
 //二分查找
+int LIS(vector<int> &arr)
+{
+    int length = arr.size();
+    if (length == 0)
+    {
+        return -1;
+    }
+    vector<int> vec;
+    // vector不能数组那样填充元素再push_back
+    // 除非采用下标寻址
+    // fill_n(vec.begin(), length, 1);
+    for (auto item : arr)
+    {
+        if (vec.empty() || vec.back() < item)
+        {
+            vec.emplace_back(item);
+        }
+        else
+        {
+            for (int i = 0; i < vec.size(); ++i)
+            {
+                if (vec[i] > item)
+                {
+                    vec[i] = item;
+                    break;
+                }
+            }
+        }
+    }
+    return vec.size();
+}
 ```
 ### 101、缺失数字
 
