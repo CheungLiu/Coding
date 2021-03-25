@@ -22,7 +22,42 @@ public:
 };
 ```
 
+### 54、数组中相加和为0的三元组
+```C++
+//先排序，然后以第一个值为基准开始遍历，用双指针求第二个值和第三个值
+class Solution {
+public:
+    vector<vector<int> > threeSum(vector<int> &num) {
+        int length=num.size();
+        if(length<3){
+            return {};
+        }
+        sort(num.begin(),num.end());
+        vector<vector<int>> vec;
+        for(int i=0;i<length-2;i++){
+            int j=i+1;
+            int k=length-1;
+            for(;j<k;){
+                int sum = num[i]+num[j]+num[k];
+                if(sum>0){
+                    --k;
+                }else if(sum<0){
+                    ++j;
+                }else{
+                    vector<int> temp={num[i],num[j],num[k]};
+                    vec.emplace_back(temp);
+                    while(j+1<k&&num[j]==num[j+1])++j;
+                    while(j+1<k&&num[k-1]==num[k])--k;
+                    ++j,--k;
+                }
+            }
+            while(i<length-2&&num[i]==num[i+1])++i;
+        }
+        return vec;
+    }
+};
 
+```
 
 ### 33、合并有序链表
 
