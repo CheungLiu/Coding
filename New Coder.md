@@ -252,6 +252,54 @@ vector<int> twoSum(vector<int>& numbers, int target) {
     }
 ```
 
+### 66、两个链表的第一个公告结点
+```C++
+//自己的方法段错误
+int LengthList(ListNode * pHead){
+        int length=0;
+        while(pHead!=nullptr){
+            ++length;
+            pHead=pHead->next;
+        }
+        return length;
+    }
+    ListNode* FindFirstCommonNode( ListNode* pHead1, ListNode* pHead2) {
+        if(pHead1==nullptr){
+            return pHead2;
+        }
+        if(pHead2==nullptr){
+            return pHead1;
+        }
+        int length1=LengthList(pHead1);
+        int length2=LengthList(pHead2);
+        if(length1>length2){
+            while(length1-length2){
+                pHead1=pHead1->next;
+            }
+        }else{
+            while(length2-length1){
+                pHead2=pHead2->next;
+            }
+        }
+        while(pHead1!=nullptr&&pHead2!=nullptr){
+            if(pHead1==pHead2){
+                return pHead1;
+            }
+        }
+        return nullptr;
+    }
+
+
+//
+ListNode* FindFirstCommonNode( ListNode* pHead1, ListNode* pHead2) {
+        ListNode *ta = pHead1, *tb = pHead2;
+        while (ta != tb) {
+            ta = ta ? ta->next : pHead2;
+            tb = tb ? tb->next : pHead1;
+        }
+        return ta;
+    }
+```
 
 ### 91、最长上升子序列
 ```C++
