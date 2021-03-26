@@ -399,9 +399,7 @@ int solve(int* a, int aLen) {
     }
     return a[key];
 }
-```
 
-```c++
 //位运算
 int solve(int* a, int aLen) {
     // write code here
@@ -414,4 +412,19 @@ int solve(int* a, int aLen) {
 }
 ```
 
-### 
+### 144、不相邻最大子序列和
+```C++
+long long subsequence(int n, vector<int>& array) {
+        // write code here
+        // 因为需要取不相邻的两个值，dp数组中填充下标为0和1的位置
+        vector<int> dp={0,array[0]};
+        int i=0;
+        int j=0;
+        for(i=1;i<n;++i){
+            // 每次从array中取一个下标值为i的时候，在dp中取值需要+1
+            dp.emplace_back(max(dp[i+1-1],dp[i+1-2]+array[i]));
+        }
+        // 因为dp[0]填充了0
+        return dp[n];
+    }
+```
