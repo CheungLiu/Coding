@@ -301,6 +301,26 @@ ListNode* FindFirstCommonNode( ListNode* pHead1, ListNode* pHead2) {
     }
 ```
 
+### 69、链表中倒数第k个结点
+```C++
+class Solution {
+public:
+    ListNode* getKthFromEnd(ListNode* pHead, int k) {
+        ListNode* Tail=pHead;
+        for(int i=0;i<k-1;++i){
+            if(Tail==nullptr){
+                return Tail;
+            }
+            Tail=Tail->next;
+        }
+        while(Tail->next!=nullptr){
+            Tail=Tail->next;
+            pHead=pHead->next;
+        }
+        return pHead;
+    }
+};
+```
 ### 91、最长上升子序列
 ```C++
 //动态规划
