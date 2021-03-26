@@ -281,7 +281,7 @@ int LIS(vector<int> &arr)
         //里面的for循环是寻找长度为i时的最长递增子序列，从长度为0开始找
         for (int j = 0; j < i; ++j)
         {
-            if (arr[i] >= arr[j])
+            if (arr[i] > arr[j])
             {
                 //dp[i]表示数组的前i个元素构成的最长上升子序列
                 dp[i] = max(dp[i], dp[j] + 1);
@@ -291,7 +291,7 @@ int LIS(vector<int> &arr)
     }
     return max_length;
 }
-//二分查找
+//分查找
 int LIS(vector<int> &arr)
 {
     int length = arr.size();
@@ -322,6 +322,50 @@ int LIS(vector<int> &arr)
         }
     }
     return vec.size();
+}
+
+// 方法3：
+vector<int> LIS(vector<int> &arr)
+{
+    int length = arr.size();
+    if (length < 0)
+    {
+        return arr;
+    }
+    vector<int> vec;
+    vector<int> maxLength;
+    vec.emplace_back(arr[0]);
+    maxLength.emplace_back(1);
+    for (int k = 1; k < length; ++k)
+    {
+        if (arr[k] > vec.back())
+        {
+            vec.emplace_back(arr[k]);
+            maxLength.emplace_back(vec.size());
+        }
+        else
+        {
+            int index = lower_bound(vec.begin(), vec.end(), arr[k]) - vec.begin();
+            vec[index] = arr[k];
+            maxLength.emplace_back(index + 1);
+        }
+    }
+    // 首先因为在lower_bound的过程中，vec中的元素可能会被会面较小的元素所替换
+    // 所以我们需要在maxLength从后往前查找，如果maxLength[i] == j，说明vec[j-1]的值应该是
+    // arr[i]对应的值
+    // 因为maxLength[i]数组里存放以元素i结尾的最大递增子序列长度
+    for (int i = length - 1, j = vec.size(); j > 0; --i)
+    {
+        // maxLength[i]的值是vec对应值下标+1
+        // 也就是说，maxLength最后一个元素=vec最后一个元素的下标+1
+        // 等价于maxLength[length-1]=vec.size()
+        if (maxLength[i] == j)
+        {
+            j--;
+            vec[j] = arr[i];
+        }
+    }
+    return vec;
 }
 ```
 ### 101、缺失数字
