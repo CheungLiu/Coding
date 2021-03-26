@@ -232,29 +232,24 @@ vector<int> twoSum(vector<int>& numbers, int target) {
     return {-1,-1};
 }
 
-
-class Solution {
-    // 最简单的方法，就是从第一个数n1开始遍历，找到（target-n1）的数的下标;
-public:
-    vector<int> twoSum(vector<int> &numbers, int target) {
-        // 返回数组，记录两个下标
-        vector<int> res ;
-        unordered_map<int, int> mymap;
-        // 建立hash table array's value=> array's index
-        for(int i=0; i<numbers.size(); i++){
-            mymap[numbers[i]] = i;
+// 解法2:哈希表
+vector<int> twoSum(vector<int>& numbers, int target) {
+        unordered_map<int, int> myMap;
+        for(int i=0;i<numbers.size();++i){
+            myMap[numbers[i]]=i;
         }
-        // 第二次遍历，查询是否存在当前数的complement在hash table中
-        for(int i=0; i<numbers.size(); i++){
-            int complement = target - numbers[i];
-            if(mymap.count(complement)!=0 && mymap.at(complement)!=i){
-                res = {i+1, mymap.at(complement)+1};
-                return res;
+        vector<int> vec;
+        for(int i=0;i<numbers.size();++i){
+            int reverse=target-numbers[i];
+            // 需要满足 index1 小于index2，reverse[i]本身，不然就是同一个数
+            if(myMap.count(reverse)&&myMap.at(reverse)!=i){
+                // unordered_map是无序的，即使输入[70,30,20,100, 110, 150],90
+                // 但是我们返回的是下标的顺序，第一个元素是70，下标为0，所以reverse只能去下标大于0的其余元素去找，即20的下标2
+                return {i+1,myMap.at(reverse)+1};
             }
         }
-        throw invalid_argument("No two sum solution");
+        return {-1,-1};
     }
-};
 ```
 
 
