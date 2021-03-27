@@ -1,4 +1,30 @@
-7、股票（一次交易）
+
+
+### 3、链表中环的入口节点
+```C++
+//LeetCode过了，newcoder没过
+bool hasCycle(ListNode *head) {
+        if(head==nullptr||head->next==nullptr){
+            return false;
+        }
+        ListNode* slowP=head;
+        ListNode* fastP=head;
+        while(fastP->next!=nullptr){
+            slowP=slowP->next;
+            fastP=fastP->next;
+            if(fastP->next==nullptr){
+                return false;
+            }
+            fastP=fastP->next;
+            if(slowP==fastP){
+                return true;
+            }
+        }
+        return false;
+    }
+```
+
+### 7、股票（一次交易）
 
 ```c++
 class Solution {
