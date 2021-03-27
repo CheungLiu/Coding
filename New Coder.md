@@ -2,26 +2,51 @@
 
 ### 3、链表中环的入口节点
 ```C++
-//LeetCode过了，newcoder没过
+//判断链表中是否有环
 bool hasCycle(ListNode *head) {
-        if(head==nullptr||head->next==nullptr){
-            return false;
-        }
-        ListNode* slowP=head;
-        ListNode* fastP=head;
-        while(fastP->next!=nullptr){
-            slowP=slowP->next;
-            fastP=fastP->next;
-            if(fastP->next==nullptr){
-                return false;
-            }
-            fastP=fastP->next;
-            if(slowP==fastP){
-                return true;
-            }
-        }
+    if(head==nullptr||head->next==nullptr){
         return false;
     }
+    ListNode* slowP=head;
+    ListNode* fastP=head;
+    while(fastP->next!=nullptr){
+        slowP=slowP->next;
+        fastP=fastP->next;
+        if(fastP->next==nullptr){
+            return false;
+        }
+        fastP=fastP->next;
+        if(slowP==fastP){
+            return true;
+        }
+    }
+    return false;
+}
+
+//不仅判断有环，还要找到入口节点
+ListNode *detectCycle(ListNode *head) {
+    if(head==nullptr){
+        return nullptr;
+    }
+    ListNode* slowP=head;
+    ListNode* fastP=head;
+    while(fastP->next!=nullptr){
+        slowP=slowP->next;
+        fastP=fastP->next;
+        if(fastP->next==nullptr){
+            return nullptr;
+        }
+        fastP=fastP->next;
+        if(slowP==fastP){
+            while(head!=fastP){
+                fastP=fastP->next;
+                head=head->next;
+            }
+            return head;
+        }
+    }
+    return nullptr;
+}
 ```
 
 ### 7、股票（一次交易）
