@@ -323,7 +323,34 @@ public
     }
 };
 ```
+### 59、矩阵的最小路径和
+```C++
+int minPathSum(vector<vector<int>> &matrix)
+{
+    int n = matrix.size();
+    int m = matrix[0].size();
+    int dp[n + 1][m + 1];
+    memset(dp, 0, sizeof(dp));
+    for (int i = 1; i <= n; ++i)
+    {
+        dp[i][1] = dp[i - 1][1] + matrix[i - 1][0];
+        }
+    // n和m不同！！！
+    for (int i = 1; i <= m; ++i)
+    {
+        dp[1][i] = dp[1][i - 1] + matrix[0][i - 1];
+    }
 
+    for (int i = 2; i <= n; ++i)
+    {
+        for (int j = 2; j <= m; ++j)
+        {
+            dp[i][j] = min(dp[i - 1][j], dp[i][j - 1]) + matrix[i - 1][j - 1];
+        }
+    }
+    return dp[n][m];
+}
+```
 ### 61、两数之和
 
 ```c++
@@ -365,6 +392,29 @@ vector<int> twoSum(vector<int>& numbers, int target) {
         }
         return {-1,-1};
     }
+```
+
+### 65、斐波拉契数列
+### Offer面试题10——青蛙跳台阶问题
+```C++
+//解法1：
+int Fibonacci(int n) {
+    int result[2]={0,1};
+    if(n<2){
+        return result[n];
+    }
+    int fibFirst=0;
+    int fibSecond=1;
+    int fibN=0;
+    for(unsigned int i=2;i<=n;++i){
+        fibN=fibFirst+fibSecond;
+        fibFirst=fibSecond;
+        fibSecond=fibSecond;
+        fibSecond=fibN;
+    }
+    return fibN;
+}
+//
 ```
 
 ### 66、两个链表的第一个公告结点
@@ -435,6 +485,96 @@ public:
         return pHead;
     }
 };
+```
+
+### 73、数组中出现次数超过一半的数字
+### offer面试题39——数组中出现次数超过一半的数字
+```C++
+//解法1：排序 O(n)
+int MoreThanHalfNum_Solution(vector<int> numbers) {
+    sort(numbers.begin(),numbers.end());
+    int mid=numbers.size()>>1;
+    int key=numbers[mid];
+    int num=0;
+    for(int i=0;i<numbers.size();++i){
+        if(numbers[i]==key){
+            ++num;
+        }
+    }
+    if(2*num>numbers.size()){
+        return key;
+    }
+    return 0;
+}
+//解法2：快速排序 O(n)
+int MoreThanHalfNum_Solution1(int* numbers, int length)
+{
+ 
+    int middle = length >> 1;
+    int start = 0;
+    int end = length - 1;
+    int index = Partition(numbers, length, start, end);
+    while(index != middle)
+    {
+        if(index > middle)
+        {
+            end = index - 1;
+            index = Partition(numbers, length, start, end);
+        }
+        else
+        {
+            start = index + 1;
+            index = Partition(numbers, length, start, end);
+        }
+    }
+ 
+    int result = numbers[middle];
+    if(!CheckMoreThanHalf(numbers, length, result))
+        result = 0;
+    return result;
+}
+//解法3：O(n)
+int MoreThanHalfNum_Solution(vector<int> numbers)
+{
+    if (numbers.size() == 0)
+    {
+        return 0;
+    }
+    int result = numbers[0];
+    int times = 1;
+    for (int i = 1; i < numbers.size(); ++i)
+    {
+        if (times == 0)
+        {
+            result = numbers[i];
+            times = 1;
+        }
+        else
+        {
+            if (result == numbers[i])
+            {
+                ++times;
+            }
+            else
+            {
+                --times;
+            }
+        }
+    }
+    int num = 0;
+    for (int i = 0; i < numbers.size(); ++i)
+    {
+        if (numbers[i] == result)
+        {
+            ++num;
+        }
+    }
+    if (2 * num > numbers.size())
+    {
+        return result;
+    }
+    return 0;
+}
 ```
 ### 91、最长上升子序列
 ```C++

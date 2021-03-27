@@ -5,37 +5,50 @@
 #include <cstring>
 #include <stdio.h>
 using namespace std;
-int longestPalindromeSubseq(string A)
+int MoreThanHalfNum_Solution(vector<int> numbers)
 {
-    int n = A.length();
-    int dp[n + 1][n + 1];
-    memset(dp, 0, sizeof(dp));
-    // for (int i = 1; i <= n; ++i)
-    // {
-    //     dp[i][i] = 1;
-    // }
-    for (int i = n; i >= 1; --i)
+    if (numbers.size() == 0)
     {
-        dp[i][i] = 1;
-        for (int j = i + 1; j <= n; ++j)
+        return 0;
+    }
+    int result = numbers[0];
+    int times = 1;
+    for (int i = 1; i < numbers.size(); ++i)
+    {
+        if (times == 0)
         {
-            if (A[i - 1] == A[j - 1])
+            result = numbers[i];
+            times = 1;
+        }
+        else
+        {
+            if (result == numbers[i])
             {
-                dp[i][j] = dp[i + 1][j - 1] + 2;
+                ++times;
             }
             else
             {
-                dp[i][j] = max(dp[i + 1][j], dp[i][j - 1]);
+                --times;
             }
         }
     }
-    return dp[1][n];
+    int num = 0;
+    for (int i = 0; i < numbers.size(); ++i)
+    {
+        if (numbers[i] == result)
+        {
+            ++num;
+        }
+    }
+    if (2 * num > numbers.size())
+    {
+        return result;
+    }
+    return 0;
 }
-
 int main()
 {
-    cout << longestPalindromeSubseq(
-                "abc1234321ab")
-         << endl;
+    vector<vector<int>> matrix = {{1, 3, 5, 9}, {8, 1, 3, 4}, {5, 0, 6, 1}, {8, 8, 4, 0}};
+
     return 0;
 }

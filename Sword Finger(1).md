@@ -184,4 +184,41 @@ T CQueue<T>::deleteHead()
     return head;
 }
 ```
-
+### 面试题10、斐波拉契数列
+```C++
+//解法1：
+int Fibonacci(int n) {
+    int result[2]={0,1};
+    if(n<2){
+        return result[n];
+    }
+    int fibFirst=0;
+    int fibSecond=1;
+    int fibN=0;
+    for(unsigned int i=2;i<=n;++i){
+        fibN=fibFirst+fibSecond;
+        fibFirst=fibSecond;
+        fibSecond=fibSecond;
+        fibSecond=fibN;
+    }
+    return fibN;
+}
+```
+### 面试题10（二）、青蛙跳台阶
+```C++
+//n阶台阶，青蛙一次可以跳一阶或者两阶
+(n>0)
+f(1)=1
+f(2)=2
+...
+f(n)=f(n-1)+f(n-1)
+//n阶台阶，青蛙一次可以跳一阶或者两阶...n阶台阶
+//归纳法：
+f(n)=2^(n-1)
+```
+### 面试题10（三）、小矩形覆盖更大的矩形
+```C++
+//2x1的矩形覆盖2x8的矩形
+f(8)=f(7)+f(6)
+f(n)=f(n-1)+f(n-2)
+```
