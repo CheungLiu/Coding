@@ -22,6 +22,38 @@ public:
 };
 ```
 
+
+### 15、求二叉树的层序遍历
+```C++
+vector<vector<int> > levelOrder(TreeNode* root) {
+        // write code here
+        vector<vector<int>> vec;
+        if(root==nullptr){
+            return vec;
+        }
+        queue<TreeNode*> que;
+        que.emplace(root);
+        while(!que.empty()){
+            vector<int> vec1;
+            int length=que.size();
+            while(length--){
+                TreeNode *temp=que.front();
+                que.pop();
+                vec1.emplace_back(temp->val);
+                if(temp->left){
+                    que.emplace(temp->left);
+                }
+                if(temp->right){
+                    que.emplace(temp->right);
+                }
+            }
+            if(vec1.size()){
+                vec.emplace_back(vec1);
+            }
+        }
+        return vec;
+    }
+```
 ### 54、数组中相加和为0的三元组
 ```C++
 //先排序，然后以第一个值为基准开始遍历，用双指针求第二个值和第三个值
