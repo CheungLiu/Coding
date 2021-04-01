@@ -1,6 +1,58 @@
+[TOC]
 
+### 1、大数加法
+
+```c++
+string solve(string s, string t)
+{
+    int lengthstr1 = s.length();
+    int lengthstr2 = t.length();
+    if (!lengthstr1)
+    {
+        return t;
+    }
+    if (!lengthstr2)
+    {
+        return s;
+    }
+    int push = 0;
+    int i = lengthstr1 - 1;
+    int j = lengthstr2 - 1;
+    stack<int> sta;
+    int num = 0;
+    while (i >= 0 && j >= 0)
+    {
+        num = s[i] + t[j] + push - '0' - '0';
+        push = num / 10;
+        num = num % 10;
+        sta.push(num);
+        --i, --j;
+    }
+    i < 0 ? s = t, i = j : 1;
+    while (i >= 0)
+    {
+        num = s[i] + push - '0';
+        push = num / 10;
+        num = num % 10;
+        sta.emplace(num);
+        --i;
+    }
+    if (push)
+    {
+        sta.push(push);
+    }
+    string str;
+    while (!sta.empty())
+    {
+        str += sta.top() + '0';
+        sta.pop();
+    }
+    return str;
+}
+```
 
 ### 3、链表中环的入口节点
+
 ```C++
 //判断链表中是否有环
 bool hasCycle(ListNode *head) {
@@ -137,7 +189,46 @@ int longestPalindromeSubseq(string A)
 }
 ```
 
+### 19、子数组的最大累加和问题
+
+```C++
+// 自己的方法
+int maxsumofSubarray(vector<int>& arr) {
+    // write code here
+    int maxSum=0;
+    int length=arr.size();
+    for(int i=length-1;i>=0;--i){
+        if(arr[i]>0){
+            break;
+        }
+        arr[i]=0;
+    }
+    for(auto item:arr){
+        if(item<=0&&(item+maxSum)<=0){
+            maxSum=0;
+            continue;
+        }else{
+            maxSum+=item;
+        }
+    }
+    return maxSum;
+}
+
+//动态规划
+int maxsumofSubarray(vector<int>& arr) {
+    // write code here
+    int maxSum=arr[0];
+    int length=arr.size();
+    for(int i=1;i<length;++i){
+        arr[i]=max(arr[i],arr[i-1]+arr[i]);
+        maxSum=max(arr[i], maxSum);
+    }        
+    return maxSum;
+}
+```
+
 ### 54、数组中相加和为0的三元组
+
 ```C++
 //先排序，然后以第一个值为基准开始遍历，用双指针求第二个值和第三个值
 class Solution {
@@ -323,7 +414,52 @@ public
     }
 };
 ```
+### 53 、删除链表的倒数第n个节点
+
+```c++
+ListNode* removeNthFromEnd(ListNode* pHead, int k) {
+    ListNode* Tail=pHead;
+    for(int i=0;i<k;++i){
+        // 保证k的值小于链表长度
+        if(Tail==nullptr){
+            return Tail;
+        }
+        // 说明到这里的时候k的值等于链表的长度，则是删除头节点
+        if(Tail->next==nullptr){
+            return pHead->next;
+        }
+        Tail=Tail->next;
+    }
+    ListNode *pre=pHead;
+    while(Tail->next!=nullptr){
+        Tail=Tail->next;
+        pre=pre->next;
+    }
+    pre->next=pre->next->next;
+    return pHead;
+}
+```
+
+### 57、反转数字
+
+```c++
+int reverse(int x) {
+    int num=0;
+    int sign=1;
+    if(x<0){
+        sign=-1;
+        x=-x;
+    }
+    while(x){
+        num=num*10+x%10;
+        x=x/10;
+    }
+    return sign*num;
+}
+```
+
 ### 59、矩阵的最小路径和
+
 ```C++
 int minPathSum(vector<vector<int>> &matrix)
 {
@@ -414,7 +550,6 @@ int Fibonacci(int n) {
     }
     return fibN;
 }
-//
 ```
 
 ### 66、两个链表的第一个公告结点
@@ -468,15 +603,21 @@ ListNode* FindFirstCommonNode( ListNode* pHead1, ListNode* pHead2) {
 
 ### 69、链表中倒数第k个结点
 ```C++
-class Solution {
-public:
-    ListNode* getKthFromEnd(ListNode* pHead, int k) {
+ListNode* FindKthToTail(ListNode* pHead, int k) {
+        // write code here
+        if(k<1){
+            return nullptr;
+        }
         ListNode* Tail=pHead;
         for(int i=0;i<k-1;++i){
             if(Tail==nullptr){
                 return Tail;
             }
             Tail=Tail->next;
+            //当k大于链表长度时，上面的Tail=Tail->next会将Tail置空，必须在判断一次
+            if(Tail==nullptr){
+                return Tail;
+            }
         }
         while(Tail->next!=nullptr){
             Tail=Tail->next;
@@ -484,7 +625,6 @@ public:
         }
         return pHead;
     }
-};
 ```
 
 ### 73、数组中出现次数超过一半的数字
@@ -686,6 +826,110 @@ vector<int> LIS(vector<int> &arr)
     return vec;
 }
 ```
+### 92、最长公共子序列（可以跳着连接）
+
+```c++
+//LeetCode 只返回长度
+int longestCommonSubsequence(string text1, string text2) {
+    int length1=text1.length();
+    int length2=text2.length();
+    int dp[length1+1][length2+1];
+    memset(dp,0,sizeof(dp));
+    for(int i=0;i<length1;++i){
+        for(int j=0;j<length2;++j){
+            if(text1[i]==text2[j]){
+                dp[i+1][j+1]=dp[i][j]+1;
+            }else{
+                dp[i+1][j+1]=max(dp[i][j+1],dp[i+1][j]);
+            }
+        }
+    }
+    return dp[length1][length2];
+}
+//采用两个二维数组
+class Solution {
+public:
+    string LCS(string text1, string text2) {
+        int length1=text1.length();
+        int length2=text2.length();
+        int dp[length1+1][length2+1];
+        int path[length1+1][length2+1];
+        memset(dp,0,sizeof(dp));
+        memset(path,0,sizeof(path));
+        for(int i=0;i<length1;++i){
+            for(int j=0;j<length2;++j){
+                if(text1[i]==text2[j]){
+                    dp[i+1][j+1]=dp[i][j]+1;
+                    // 来自dp[i - 1][j - 1]
+                    path[i+1][j+1]=1;
+                }else{
+                    // 上方格，代替的就是dp[i+1][j+1]=max(dp[i][j+1],dp[i+1][j]);
+                    if(dp[i][j+1]>=dp[i+1][j]){
+                        dp[i+1][j+1]=dp[i][j+1];
+                        path[i+1][j+1]=2;
+                    }else{
+                        // 左边格
+                        dp[i+1][j+1]=dp[i+1][j];
+                        path[i+1][j+1]=3;
+                    }
+                }
+            }
+        }
+        string str;
+        while(length1>=0&&length2>=0){
+            if(path[length1][length2]==1){
+                --length1;
+                --length2;
+                str.append(string(text1[length1]));
+            }
+        }
+        return "dp[length1][length2]";
+    }
+};
+
+
+//算法导论
+string LCS(string text1, string text2) {
+    // write code here
+    int length1 = text1.length();
+    int length2 = text2.length();
+    int dp[length1 + 1][length2 + 1];
+    int path[length1 + 1][length2 + 1];
+    memset(dp, 0, sizeof(dp));
+    memset(path, 0, sizeof(path));
+
+    for (int i = 0; i < length1; ++i)
+    {
+        for (int j = 0; j < length2; ++j)
+        {
+            if (text1[i] == text2[j])
+            {
+                dp[i + 1][j + 1] = dp[i][j] + 1;
+            }
+            else
+            {
+                dp[i+1][j+1]=max(dp[i][j+1],dp[i+1][j]);
+            }
+        }
+    }
+    string str="";
+    for(int i=length1,j=length2;dp[i][j]>=1;){
+        if(text1[i-1]==text2[j-1]){
+            str+=text1[i-1];
+            --i,--j;
+        }else if(dp[i-1][j]>=dp[i][j-1]){
+            --i;
+        }else{
+            --j;
+        }
+    }
+    reverse(str.begin(), str.end());
+    return str.empty() ? "-1" : str;
+}
+```
+
+
+
 ### 101、缺失数字
 
 ```c++
@@ -735,8 +979,62 @@ int solve(int* a, int aLen) {
 }
 ```
 
-  
+### 103、反转字符串
+
+```c++
+string solve(string str) {
+    int length=str.length();
+    int temp=0;
+    int low=0;
+    int high=length-1;
+    while(low<=high){
+        temp=str[low];
+        str[low]=str[high];
+        str[high]=temp;
+        ++low;
+        --high;
+    }
+    return str;
+}
+```
+
+### 127、最长公共子串（相邻最长的）
+
+```c++
+string LCS(string str1, string str2) {
+    int length1=str1.size();
+    int length2=str2.size();
+    int dp[length1+1][length2+1];
+    memset(dp, 0, sizeof(dp));
+    int maxLen=0,end=0;
+    for(int i=0;i<length1;++i){
+        for(int j=0;j<length2;++j){
+            if(str1[i]==str2[j]){
+                dp[i+1][j+1]=dp[i][j]+1;
+            }else{
+                dp[i+1][j+1]=0;
+            }
+            if(dp[i+1][j+1]>maxLen){
+                maxLen=dp[i+1][j+1];
+                // j记录字符串str2中，最长公共子串的最后一位
+                // 记录i也是一样的，因为这个算法是找相邻的最长
+                end=j;
+            }
+        }
+    }
+    string res;
+    if(maxLen==0) return "-1";
+    else{
+        res=str2.substr(end-maxLen+1,maxLen);
+    }        
+    return res;
+}
+```
+
+
+
 ### 141、判断回文
+
 ```C++
 #include<cstring>
 class Solution {
@@ -792,7 +1090,6 @@ long long subsequence(int n, vector<int>& array) {
             // 每次从array中取一个下标值为i的时候，在dp中取值需要+1
             dp.emplace_back(max(dp[i+1-1],dp[i+1-2]+array[i]));
         }
-        // 因为dp[0]填充了0
         return dp[n];
     }
 ```

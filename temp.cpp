@@ -1,54 +1,51 @@
 #include <iostream>
 #include <string>
-#include <iterator>
-#include <vector>
-#include <cstring>
-#include <stdio.h>
+#include <algorithm>
+#include <stack>
 using namespace std;
-int MoreThanHalfNum_Solution(vector<int> numbers)
+
+string LCS(string str1, string str2)
 {
-    if (numbers.size() == 0)
+    // write code here
+    int m = str1.size();
+    int n = str2.size();
+    // dp[i][j] str1前i个字符和str2前j个字符（以其为尾字符）的最长公共子串长度
+    int dp[m + 1][n + 1];
+    int maxlen = 0, end = 0;
+    //base case
+    for (int i = 0; i <= m; ++i)
+        dp[i][0] = 0;
+    for (int j = 0; j <= n; ++j)
+        dp[0][j] = 0;
+    for (int i = 1; i <= m; ++i)
     {
-        return 0;
-    }
-    int result = numbers[0];
-    int times = 1;
-    for (int i = 1; i < numbers.size(); ++i)
-    {
-        if (times == 0)
+        for (int j = 1; j <= n; ++j)
         {
-            result = numbers[i];
-            times = 1;
-        }
-        else
-        {
-            if (result == numbers[i])
-            {
-                ++times;
-            }
+            if (str1[i - 1] == str2[j - 1])
+                dp[i][j] = dp[i - 1][j - 1] + 1;
             else
+                dp[i][j] = 0;
+            if (dp[i][j] > maxlen)
             {
-                --times;
+                maxlen = dp[i][j];
+                end = j - 1;
             }
         }
     }
-    int num = 0;
-    for (int i = 0; i < numbers.size(); ++i)
-    {
-        if (numbers[i] == result)
-        {
-            ++num;
-        }
-    }
-    if (2 * num > numbers.size())
-    {
-        return result;
-    }
-    return 0;
+    string r;
+    if (maxlen == 0)
+        return "-1";
+    else
+        r = str2.substr(end - maxlen + 1, maxlen);
+    return r;
 }
+
 int main()
 {
-    vector<vector<int>> matrix = {{1, 3, 5, 9}, {8, 1, 3, 4}, {5, 0, 6, 1}, {8, 8, 4, 0}};
+    string str1 = "1";
+    string str2 = "99";
+
+    // cout << solve(str1, str2) << endl;
 
     return 0;
 }
