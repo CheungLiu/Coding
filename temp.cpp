@@ -2,50 +2,54 @@
 #include <string>
 #include <algorithm>
 #include <stack>
+#include <cstring>
+#include <vector>
+#include <queue>
 using namespace std;
 
-string LCS(string str1, string str2)
+void dfs(vector<vector<char>> &grid, int i, int j, int n, int m)
+{
+    grid[i][j] = '0';
+    if (i - 1 >= 0 && grid[i - 1][j] == '1')
+        dfs(grid, i - 1, j, n, m);
+    if (j - 1 >= 0 && grid[i][j - 1] == '1')
+        dfs(grid, i, j - 1, n, m);
+    if (i + 1 < n && grid[i + 1][j] == '1')
+        dfs(grid, i + 1, j, n, m);
+    if (j + 1 < m && grid[i][j + 1] == '1')
+        dfs(grid, i, j + 1, n, m);
+}
+
+int numIslands(vector<vector<char>> &grid)
 {
     // write code here
-    int m = str1.size();
-    int n = str2.size();
-    // dp[i][j] str1前i个字符和str2前j个字符（以其为尾字符）的最长公共子串长度
-    int dp[m + 1][n + 1];
-    int maxlen = 0, end = 0;
-    //base case
-    for (int i = 0; i <= m; ++i)
-        dp[i][0] = 0;
-    for (int j = 0; j <= n; ++j)
-        dp[0][j] = 0;
-    for (int i = 1; i <= m; ++i)
+    int n = grid.size();
+    if (n == 0)
     {
-        for (int j = 1; j <= n; ++j)
+        return 0;
+    }
+    int m = grid[0].size();
+    int num = 0;
+    for (int i = 0; i < n; ++i)
+    {
+        for (int j = 0; j < m; ++j)
         {
-            if (str1[i - 1] == str2[j - 1])
-                dp[i][j] = dp[i - 1][j - 1] + 1;
-            else
-                dp[i][j] = 0;
-            if (dp[i][j] > maxlen)
+            if (grid[i][j] == '1')
             {
-                maxlen = dp[i][j];
-                end = j - 1;
+                ++num;
+                dfs(grid, i, j, n, m);
             }
         }
     }
-    string r;
-    if (maxlen == 0)
-        return "-1";
-    else
-        r = str2.substr(end - maxlen + 1, maxlen);
-    return r;
+    return num;
 }
 
 int main()
 {
     string str1 = "1";
     string str2 = "99";
-
-    // cout << solve(str1, str2) << endl;
+    vector<vector<char>> vec = {{1, 1, 0, 0, 0}, {0, 1, 0, 1, 1}, {0, 0, 0, 1, 1}, {0, 0, 0, 0, 0}, {0, 0, 1, 1, 1}};
+    cout << solve(vec) << endl;
 
     return 0;
 }

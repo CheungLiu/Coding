@@ -295,6 +295,95 @@ public:
 };
 ```
 
+### 35、最小编辑代价
+
+```c++
+// LeetCode只有最小代价
+
+// D[i][j-1] 为 A 的前 i 个字符和 B 的前 j - 1 个字符编辑距离的子问题。即对于 B 的第 j 个字符，我们在 A 的末
+// 尾添加了一个相同的字符，那么 D[i][j] 最小可以为 D[i][j-1] + 1；
+int minDistance(string word1, string word2)
+{
+    int length1 = word1.size();
+    int length2 = word2.size();
+    if (length1 * length2 == 0)
+    {
+        return length1 + length2;
+    }
+    int dp[length1 + 1][length2 + 1];
+    memset(dp, 0, sizeof(dp));
+    for (int i = 1; i <= length1; ++i)
+    {
+        dp[i][0] = i;
+    }
+    for (int j = 1; j <= length2; ++j)
+    {
+        dp[0][j] = j;
+    }
+    for (int i = 0; i < length1; ++i)
+    {
+        for (int j = 0; j < length2; ++j)
+        {
+            int up = dp[i][j + 1] + 1;
+            int left = dp[i + 1][j] + 1;
+            int left_up = dp[i][j];
+            if (word1[i] != word2[j])
+            {
+                left_up += 1;
+            }
+            dp[i + 1][j + 1] = min(left, min(up, left_up));
+        }
+    }
+    return dp[length1][length2];
+}
+
+//方法二 newcoder
+int minEditCost(string word1, string word2, int ic, int dc, int rc)
+{
+    int length1 = word1.size();
+    int length2 = word2.size();
+    if (length1 * length2 == 0)
+    {
+        return length1 + length2;
+    }
+    int dp[length1 + 1][length2 + 1];
+    memset(dp, 0, sizeof(dp));
+    //dp[i][j]表示word1的前i个字符编辑成word2的前j个字符需要的最小操作数
+    //dp[i][j]在本方法中是单纯的从i到j
+    //就和方法1不一样，方法1还会从j到i的理解
+    for (int i = 1; i <= length1; ++i)
+    {
+        dp[i][0] = i * dc;
+    }
+    for (int j = 1; j <= length2; ++j)
+    {
+        dp[0][j] = j * ic;
+    }
+    for (int i = 0; i < length1; ++i)
+    {
+        for (int j = 0; j < length2; ++j)
+        {
+
+            if (word1[i] == word2[j])
+            {
+                dp[i + 1][j + 1] = dp[i][j];
+            }
+            else
+            {
+                //因为数组是从1开始的，所以dp[i + 1][j]代表的是A的第i个字符到B的第j-1个字符，所以是需要dp[i + 1][j]加上一次插入操作
+                int Insert = dp[i + 1][j] + ic;
+                int Delete = dp[i][j + 1] + dc;
+                int left_up = dp[i][j] + rc;
+                dp[i + 1][j + 1] = min(Insert, min(Delete, left_up));
+            }
+        }
+    }
+    return dp[length1][length2];
+}
+```
+
+
+
 ### 37、合并区间
 
 ```c++
@@ -997,6 +1086,50 @@ string solve(string str) {
     return str;
 }
 ```
+
+### 109、岛屿数量
+
+```c++
+//深度优先
+//时间复杂度：O(MN)O(MN)，其中 MM 和 NN 分别为行数和列数。
+//空间复杂度：O(MN)O(MN)，在最坏情况下，整个网格均为陆地，深度优先搜索的深度达到 M NMN。
+void dfs(vector<vector<char>> &grid, int i, int j, int n, int m)
+{
+    grid[i][j] = '0';
+    if (i - 1 >= 0 && grid[i - 1][j] == '1')
+        dfs(grid, i - 1, j, n, m);
+    if (j - 1 >= 0 && grid[i][j - 1] == '1')
+        dfs(grid, i, j - 1, n, m);
+    if (i + 1 < n && grid[i + 1][j] == '1')
+        dfs(grid, i + 1, j, n, m);
+    if (j + 1 < m && grid[i][j + 1] == '1')
+        dfs(grid, i, j + 1, n, m);
+}
+int numIslands(vector<vector<char>> &grid)
+{
+    int n = grid.size();
+    if (n == 0)
+    {
+        return 0;
+    }
+    int m = grid[0].size();
+    int num = 0;
+    for (int i = 0; i < n; ++i)
+    {
+        for (int j = 0; j < m; ++j)
+        {
+            if (grid[i][j] == '1')
+            {
+                ++num;
+                dfs(grid, i, j, n, m);
+            }
+        }
+    }
+    return num;
+}
+```
+
+
 
 ### 127、最长公共子串（相邻最长的）
 
