@@ -4,27 +4,12 @@
 #include <algorithm>
 #include <stdio.h>
 using namespace std;
-class SingleTon
+
+class GamePlayer
 {
 private:
-    static SingleTon *single;
-    SingleTon() {}
-    ~SingleTon() {}
-
-public:
-    SingleTon(SingleTon &sin) = delete;
-    SingleTon &operator=(SingleTon &sin) = delete;
-    SingleTon *getInstance()
-    {
-        if (single == nullptr)
-        {
-            single = new SingleTon();
-        }
-    }
-    void Print()
-    {
-        printf("%X\n", single);
-    }
+    static const int NUM_TURNS = 5; // 常量声明
+    int scores[NUM_TURNS];          // 使用该常量
 };
 
 int main()

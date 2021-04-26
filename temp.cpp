@@ -19,10 +19,8 @@ void dfs(vector<vector<char>> &grid, int i, int j, int n, int m)
     if (j + 1 < m && grid[i][j + 1] == '1')
         dfs(grid, i, j + 1, n, m);
 }
-
 int numIslands(vector<vector<char>> &grid)
 {
-    // write code here
     int n = grid.size();
     if (n == 0)
     {
@@ -49,7 +47,7 @@ int main()
     string str1 = "1";
     string str2 = "99";
     vector<vector<char>> vec = {{1, 1, 0, 0, 0}, {0, 1, 0, 1, 1}, {0, 0, 0, 1, 1}, {0, 0, 0, 0, 0}, {0, 0, 1, 1, 1}};
-    cout << solve(vec) << endl;
+   
 
     return 0;
 }
